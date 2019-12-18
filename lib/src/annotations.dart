@@ -1,12 +1,6 @@
 class ListEntity {
   final String titlePage;
-  const ListEntity({this.titlePage});
-}
-
-class ListTitle {
-  const ListTitle();
-}
-
-class ListSubTitle {
-  const ListSubTitle();
+  final String listTitle;
+  final String listSubTitle;
+  const ListEntity({this.titlePage, this.listTitle, this.listSubTitle});
 }
