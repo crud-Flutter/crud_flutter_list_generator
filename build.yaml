@@ -1,7 +1,15 @@
 builders:
-  list:
+  listStateless:
     import: "package:crud_flutter_list_generator/builder.dart"
     builder_factories: ["listStatelessFlutterBuilder"]
     build_extensions: {".dart": [".list.stateless.dart"]}
     auto_apply: dependents
     build_to: source
+
+  listStateful:
+    import: "package:crud_flutter_list_generator/builder.dart"
+    builder_factories: ["listStateFulFlutterBuilder"]
+    build_extensions: {".dart": [".list.stateful.dart"]}
+    auto_apply: dependents
+    build_to: source
+  
