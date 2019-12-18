@@ -1,0 +1,7 @@
+builders:
+  list:
+    import: "package:crud_flutter_list_generator/builder.dart"
+    builder_factories: ["listFlutterBuilder"]
+    build_extensions: {".dart": [".list.flutter.dart"]}
+    auto_apply: dependents
+    build_to: source
