@@ -1,6 +1,25 @@
 import 'package:crud_generator/crud_generator.dart';
 
-class GenerateListStatelessFlutterClass extends GenerateEntityClassAbstract {
+abstract class GenerateFlutterWidgetAbstract
+    extends GenerateEntityClassAbstract {
+  GenerateFlutterWidgetAbstract(String name,
+      {String classSuffix, String parentClass})
+      : super(name, classSuffix: classSuffix, parentClass: parentClass);
+  generateWidget();
+
+  @override
+  addImports() {
+    generateClass.writeln('import \'package:flutter/material.dart\';');
+  }
+
+  @override
+  String build() {
+    this.generateWidget();
+    return super.build();
+  }
+}
+
+class GenerateListStatelessFlutterClass extends GenerateFlutterWidgetAbstract {
   StringBuffer widget = new StringBuffer();
   String titlePage;
   String listTitle;
@@ -8,11 +27,6 @@ class GenerateListStatelessFlutterClass extends GenerateEntityClassAbstract {
 
   GenerateListStatelessFlutterClass(String name)
       : super(name, classSuffix: 'Page', parentClass: 'StatelessWidget');
-
-  @override
-  addImports() {
-    generateClass.writeln('import \'package:flutter/material.dart\';');
-  }
 
   setTitlePage(String titlePage) {
     this.titlePage = titlePage;
@@ -29,7 +43,7 @@ class GenerateListStatelessFlutterClass extends GenerateEntityClassAbstract {
     return this;
   }
 
-  _widget() {
+  generateWidget() {
     generateClass.writeln('Widget build(BuildContext context) {');
     generateClass.writeln('return Scaffold(');
     generateClass.writeln('appBar: AppBar(');
@@ -42,12 +56,13 @@ class GenerateListStatelessFlutterClass extends GenerateEntityClassAbstract {
     generateClass.writeln(');');
     generateClass.writeln('}');
   }
+}
 
-
-  @override
-  String build() {
-    // this._bloc();
-    this._widget();
-    return super.build();
+class GenerateListStatefullFlutterClass extends GenerateFlutterWidgetAbstract {
+  GenerateListStatefullFlutterClass(String name)
+      : super(name, classSuffix: 'FullPage', parentClass: 'StatefulWidget');
+@override
+  generateWidget() {
+    generateClass.writeln(classPrefix+'PageState createState() => $classPrefix'+'PageState();');
   }
 }
