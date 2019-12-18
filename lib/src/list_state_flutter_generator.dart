@@ -45,7 +45,7 @@ class GenerateListStateFlutterClass extends GenerateFlutterWidgetAbstract {
     generateClass.writeln('stream: _bloc.$nameLowerCase' 's,');
     generateClass.writeln('builder: (context, snapshot) {');
     generateClass
-        .writeln('if (!snapshot.hasData) return CircularProgressIndicator();');
+        .writeln('if (!snapshot.hasData) return Center(child: CircularProgressIndicator());');
     // generateClass.writeln(
     //     'if (snapshot.hasError) return SimpleDilaog(title: snapshot.error);');
     generateClass.writeln('return ListView(');
