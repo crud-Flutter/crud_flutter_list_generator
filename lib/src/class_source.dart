@@ -61,8 +61,10 @@ class GenerateListStatelessFlutterClass extends GenerateFlutterWidgetAbstract {
 class GenerateListStatefulFlutterClass extends GenerateFlutterWidgetAbstract {
   GenerateListStatefulFlutterClass(String name)
       : super(name, classSuffix: 'ListFulPage', parentClass: 'StatefulWidget');
-@override
+  @override
   void generateWidget() {
-    generateClass.writeln(classPrefix+'PageState createState() => $classPrefix'+'PageState();');
+    generateClass.writeln(classPrefix +
+        'PageState createState() => $classPrefix' +
+        'PageState();');
   }
 }
