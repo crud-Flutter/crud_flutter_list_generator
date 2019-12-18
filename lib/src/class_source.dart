@@ -5,45 +5,45 @@ abstract class GenerateFlutterWidgetAbstract
   GenerateFlutterWidgetAbstract(String name,
       {String classSuffix, String parentClass})
       : super(name, classSuffix: classSuffix, parentClass: parentClass);
-  generateWidget();
+  void generateWidget();
 
   @override
-  addImports() {
+  void addImports() {
     generateClass.writeln('import \'package:flutter/material.dart\';');
   }
 
   @override
   String build() {
-    this.generateWidget();
+    generateWidget();
     return super.build();
   }
 }
 
 class GenerateListStatelessFlutterClass extends GenerateFlutterWidgetAbstract {
-  StringBuffer widget = new StringBuffer();
   String titlePage;
   String listTitle;
   String listSubTitle;
 
   GenerateListStatelessFlutterClass(String name)
-      : super(name, classSuffix: 'Page', parentClass: 'StatelessWidget');
+      : super(name, classSuffix: 'ListPage', parentClass: 'StatelessWidget');
 
-  setTitlePage(String titlePage) {
+  GenerateListStatelessFlutterClass setTitlePage(String titlePage) {
     this.titlePage = titlePage;
     return this;
   }
 
-  setListTitle(String title) {
-    this.listTitle = title;
+  GenerateListStatelessFlutterClass setListTitle(String title) {
+    listTitle = title;
     return this;
   }
 
-  setListSubTitle(String title) {
-    this.listSubTitle = title;
+  GenerateListStatelessFlutterClass setListSubTitle(String title) {
+    listSubTitle = title;
     return this;
   }
 
-  generateWidget() {
+  @override
+  void generateWidget() {
     generateClass.writeln('Widget build(BuildContext context) {');
     generateClass.writeln('return Scaffold(');
     generateClass.writeln('appBar: AppBar(');
@@ -58,11 +58,11 @@ class GenerateListStatelessFlutterClass extends GenerateFlutterWidgetAbstract {
   }
 }
 
-class GenerateListStatefullFlutterClass extends GenerateFlutterWidgetAbstract {
-  GenerateListStatefullFlutterClass(String name)
-      : super(name, classSuffix: 'FullPage', parentClass: 'StatefulWidget');
+class GenerateListStatefulFlutterClass extends GenerateFlutterWidgetAbstract {
+  GenerateListStatefulFlutterClass(String name)
+      : super(name, classSuffix: 'ListFulPage', parentClass: 'StatefulWidget');
 @override
-  generateWidget() {
+  void generateWidget() {
     generateClass.writeln(classPrefix+'PageState createState() => $classPrefix'+'PageState();');
   }
 }
