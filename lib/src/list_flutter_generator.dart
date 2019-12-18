@@ -6,10 +6,20 @@ import 'package:source_gen/src/constants/reader.dart';
 
 import 'class_source.dart';
 
-class ListFlutterGenerator extends GeneratorForAnnotation<ListEntity> {
+class ListStatelessFlutterGenerator extends GeneratorForAnnotation<ListEntity> {
   @override
-  generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) {
-    return GenerateListFlutterClass(element.name).setTitlePage(element.name).build();    
+  generateForAnnotatedElement(
+      Element element, ConstantReader annotation, BuildStep buildStep) {
+    return GenerateListStatelessFlutterClass(element.name)
+        .setTitlePage(_getTitlePage(element, annotation))
+        .build();
   }
 
+  String _getTitlePage(Element element, ConstantReader annotation) {
+    try {
+      return annotation.read('titlePage').stringValue;
+    } catch (FormatException) {
+      return element.name + 's';
+    }
+  }
 }
