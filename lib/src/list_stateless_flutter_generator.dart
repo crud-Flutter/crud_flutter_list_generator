@@ -12,16 +12,8 @@ class ListStatelessFlutterGenerator extends GeneratorForAnnotation<ListEntity> {
   FutureOr<String> generateForAnnotatedElement(
       Element element, ConstantReader annotation, BuildStep buildStep) {
     return GenerateListStatelessFlutterClass(element.name)
-        .setTitlePage(_getTitlePage(element, annotation))
+        .setTitlePage(getValueAnnotation(element, annotation, 'titlePage'))        
         .build();
-  }
-
-  String _getTitlePage(Element element, ConstantReader annotation) {
-    try {
-      return annotation.read('titlePage').stringValue;
-    } catch (FormatException) {
-      return element.name + 's';
-    }
   }
 }
 
@@ -34,7 +26,11 @@ class GenerateListStatelessFlutterClass extends GenerateFlutterWidgetAbstract {
       : super(name, classSuffix: 'ListPage', parentClass: 'StatelessWidget');
 
   GenerateListStatelessFlutterClass setTitlePage(String titlePage) {
-    this.titlePage = titlePage;
+    if (titlePage == null) {
+      this.titlePage = classPrefix + 's';
+    }else {
+      this.titlePage = titlePage;
+    }    
     return this;
   }
 
@@ -55,11 +51,17 @@ class GenerateListStatelessFlutterClass extends GenerateFlutterWidgetAbstract {
     generateClass.writeln('appBar: AppBar(');
     generateClass.writeln('title: Text(\'$titlePage\'),');
     generateClass.writeln('),');
-    generateClass.writeln('body: Container(),');
+    generateClass.writeln('body: $classPrefix' 'ListFulPage(),');
     generateClass.writeln('floatingActionButton: FloatingActionButton(');
     generateClass.writeln('child: Icon(Icons.add),');
     generateClass.writeln('),');
     generateClass.writeln(');');
     generateClass.writeln('}');
+  }
+
+  @override
+  void addImports() {
+    super.addImports();
+    importGenerate('list.stateful');
   }
 }
