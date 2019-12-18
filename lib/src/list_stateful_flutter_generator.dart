@@ -20,7 +20,13 @@ class GenerateListStatefulFlutterClass extends GenerateFlutterWidgetAbstract {
   @override
   void generateWidget() {
     generateClass.writeln(classPrefix +
-        'PageState createState() => $classPrefix' +
-        'PageState();');
+        'ListPageState createState() => $classPrefix' +
+        'ListPageState();');
+  }
+
+  @override
+  void addImports() {    
+    super.addImports();
+    importGenerate('list.state');
   }
 }
