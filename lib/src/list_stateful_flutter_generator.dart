@@ -9,7 +9,7 @@ import 'package:source_gen/source_gen.dart';
 class ListStatefulFlutterGenerator extends GeneratorForAnnotation<ListEntity> {
   @override
   FutureOr<String> generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) {
-    return GenerateListStatefullFlutterClass(element.name).build();
+    return GenerateListStatefulFlutterClass(element.name).build();
   }
 
 }
