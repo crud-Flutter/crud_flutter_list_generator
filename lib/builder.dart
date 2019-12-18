@@ -12,5 +12,5 @@ Builder listStateFulFlutterBuilder(BuilderOptions options) =>
     LibraryBuilder(ListStatefulFlutterGenerator(),
         generatedExtension: '.list.stateful.dart');
 Builder listStateFlutterBuilder(BuilderOptions options) =>
-    LibraryBuilder(ListStateFLutterBuilder(),
+    LibraryBuilder(ListStateFlutterBuilder(),
         generatedExtension: '.list.state.dart');
