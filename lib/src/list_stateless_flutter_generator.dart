@@ -2,66 +2,45 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/src/builder/build_step.dart';
+import 'package:code_builder/code_builder.dart';
 import 'package:crud_flutter_list_generator/crud_flutter_list_generator.dart';
 import 'package:crud_generator/crud_generator.dart';
 import 'package:source_gen/source_gen.dart';
-import 'package:source_gen/src/constants/reader.dart';
 
-class ListStatelessFlutterGenerator extends GeneratorForAnnotation<ListEntity> {
+class ListStatelessFlutterGenerator
+    extends GenerateFlutterWidgetForAnnotation<ListEntity> {
   @override
   FutureOr<String> generateForAnnotatedElement(
       Element element, ConstantReader annotation, BuildStep buildStep) {
-    return GenerateListStatelessFlutterClass(element.name)
-        .setTitlePage(getValueAnnotation(element, annotation, 'titlePage'))        
-        .build();
-  }
-}
-
-class GenerateListStatelessFlutterClass extends GenerateFlutterWidgetAbstract {
-  String titlePage;
-  String listTitle;
-  String listSubTitle;
-
-  GenerateListStatelessFlutterClass(String name)
-      : super(name, classSuffix: 'ListPage', parentClass: 'StatelessWidget');
-
-  GenerateListStatelessFlutterClass setTitlePage(String titlePage) {
-    if (titlePage == null) {
-      this.titlePage = classPrefix + 's';
-    }else {
-      this.titlePage = titlePage;
-    }    
-    return this;
+    name = '${element.name}ListPage';
+    this.element = element;
+    this.annotation = annotation;
+    extend = refer('StatelessWidget');
+    _methodBuild();
+    return "import 'package:flutter/material.dart';" + build();
   }
 
-  GenerateListStatelessFlutterClass setListTitle(String title) {
-    listTitle = title;
-    return this;
-  }
-
-  GenerateListStatelessFlutterClass setListSubTitle(String title) {
-    listSubTitle = title;
-    return this;
-  }
-
-  @override
-  void generateWidget() {
-    generateClass.writeln('Widget build(BuildContext context) {');
-    generateClass.writeln('return Scaffold(');
-    generateClass.writeln('appBar: AppBar(');
-    generateClass.writeln('title: Text(\'$titlePage\'),');
-    generateClass.writeln('),');
-    generateClass.writeln('body: $classPrefix' 'ListFulPage(),');
-    generateClass.writeln('floatingActionButton: FloatingActionButton(');
-    generateClass.writeln('child: Icon(Icons.add),');
-    generateClass.writeln('),');
-    generateClass.writeln(');');
-    generateClass.writeln('}');
-  }
-
-  @override
-  void addImports() {
-    super.addImports();
-    importGenerate('list.stateful');
+  void _methodBuild() {
+    var create = true;
+    try {
+      create = getAnnotationValue('create').boolValue;
+    } catch (e) {}
+    var titlePage = '${element.name}s';
+    try {
+      titlePage = getAnnotationValue('titlePage').stringValue;
+    } catch (e) {}
+    if (create) {
+      methodBuild(instanceScaffold(titlePage,
+          body: Code('body: ListFulPage(),'),
+          fab: instanceFab(
+              Code('Icon(Icons.add)'),
+              Code(
+                  '(){Navigator.push(context, MaterialPageRoute(builder: (context) => ${element.name}FormPage()));}'))));
+    } else {
+      methodBuild(instanceScaffold(
+        titlePage,
+        body: Code('body: ListFulPage(),'),
+      ));
+    }
   }
 }
