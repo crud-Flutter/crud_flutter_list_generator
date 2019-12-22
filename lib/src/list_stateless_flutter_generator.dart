@@ -17,7 +17,7 @@ class ListStatelessFlutterGenerator
     this.annotation = annotation;
     extend = refer('StatelessWidget');
     _methodBuild();
-    return "import 'package:flutter/material.dart';" + build();
+    return build();
   }
 
   void _methodBuild() {
