@@ -17,7 +17,7 @@ class ListStatelessFlutterGenerator
     this.annotation = annotation;
     extend = refer('StatelessWidget');
     _methodBuild();
-    return build();
+    return "import '${element.name.toLowerCase()}.list.stateful.dart';" + build();
   }
 
   void _methodBuild() {
@@ -29,9 +29,10 @@ class ListStatelessFlutterGenerator
     try {
       titlePage = getAnnotationValue('titlePage').stringValue;
     } catch (e) {}
+    var body = Code('body: ${element.name}ListFulPage(),');
     if (create) {
       methodBuild(instanceScaffold(titlePage,
-          body: Code('body: ListFulPage(),'),
+          body: body,
           fab: instanceFab(
               Code('Icon(Icons.add)'),
               Code(
@@ -39,7 +40,7 @@ class ListStatelessFlutterGenerator
     } else {
       methodBuild(instanceScaffold(
         titlePage,
-        body: Code('body: ListFulPage(),'),
+        body: body,
       ));
     }
   }
