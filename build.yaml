@@ -13,7 +13,7 @@ builders:
     auto_apply: dependents
     build_to: source
   
-  listStatefulState:
+  listState:
     import: "package:crud_flutter_list_generator/builder.dart"
     builder_factories: ["listStateFlutterBuilder"]
     build_extensions: {".dart": [".list.state.dart"]}
