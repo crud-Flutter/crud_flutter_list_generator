@@ -27,6 +27,7 @@ class ListStateFlutterBuilder
     _declareField();
     _methodBuild();
     return "import '${element.name.toLowerCase()}.list.stateful.dart';"
+            "import '${element.name.toLowerCase()}.entity.dart';"
             "import '${element.name.toLowerCase()}.bloc.dart';" +
         build();
   }
@@ -52,18 +53,20 @@ class ListStateFlutterBuilder
     try {
       buildCode.add(Code(
           'title: Text($entityInstance.${getAnnotationValue("listTitle").stringValue}),'));
-    } catch (e) {}
-    try {
-      buildCode.add(Code(
-          'subtitle: Text($entityInstance.${getAnnotationValue("listSubTitle").stringValue}),'));
-    } catch (e) {}
-    buildCode.add(Code(');'));
-    buildCode.add(Code('}).toList()'));
-    buildCode.add(Code(');'));
-    buildCode.add(Code('},'));
-    buildCode.add(Code(');'));
-    var blockBuilder = BlockBuilder();
-    blockBuilder.statements.addAll(buildCode);
-    methodBuild(blockBuilder.build());
+    } finally {
+      try {
+        buildCode.add(Code(
+            'subtitle: Text($entityInstance.${getAnnotationValue("listSubTitle").stringValue}),'));
+      } finally {
+        buildCode.add(Code(');'));
+        buildCode.add(Code('}).toList()'));
+        buildCode.add(Code(');'));
+        buildCode.add(Code('},'));
+        buildCode.add(Code(');'));
+        var blockBuilder = BlockBuilder();
+        blockBuilder.statements.addAll(buildCode);
+        methodBuild(blockBuilder.build());
+      }
+    }
   }
 }
