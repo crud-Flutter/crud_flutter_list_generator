@@ -16,23 +16,26 @@ class ListStatelessFlutterGenerator
     this.element = element;
     this.annotation = annotation;
     extend = refer('StatelessWidget');
-    bool create = true;
+    var create = true;
     try {
       create = getAnnotationValue('create').boolValue;
-    } catch (e) {}
-    _methodBuild(create);
-    return "import '${element.name.toLowerCase()}.list.stateful.dart';" +
-        (create
-            ? "import '${element.name.toLowerCase()}.form.stateless.dart';"
-            : '') +
-        build();
+    } finally {
+      _methodBuild(create);
+      return "import '${element.name.toLowerCase()}.list.stateful.dart';" +
+          (create
+              ? "import '${element.name.toLowerCase()}.form.stateful.dart';"
+              : '') +
+          build();
+    }
   }
 
   void _methodBuild(bool create) {
-    var titlePage = '${element.name}s';
+    var titlePage;
     try {
       titlePage = getAnnotationValue('titlePage').stringValue;
-    } catch (e) {}
+    } catch (e) {
+      titlePage = '${element.name}s';
+    }
     var body = Code('body: ${element.name}ListFulPage(),');
     if (create) {
       methodBuild(instanceScaffold(titlePage,
