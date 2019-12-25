@@ -24,7 +24,7 @@ class ListStatelessFlutterGenerator
     return "import '${element.name.toLowerCase()}.list.stateful.dart';" +
         (create
             ? "import '${element.name.toLowerCase()}.form.stateless.dart';"
-            : "") +
+            : '') +
         build();
   }
 
