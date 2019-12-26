@@ -27,6 +27,7 @@ class ListStateFlutterBuilder
     _declareField();
     _methodBuild();
     return "import '${element.name.toLowerCase()}.list.stateful.dart';"
+            "import '${element.name.toLowerCase()}.form.stateful.dart';"
             "import '${element.name.toLowerCase()}.entity.dart';"
             "import '${element.name.toLowerCase()}.bloc.dart';" +
         build();
@@ -48,7 +49,9 @@ class ListStateFlutterBuilder
       //     'if (snapshot.hasError) return SimpleDilaog(title: snapshot.error);'),
       Code('return ListView('),
       Code('children: snapshot.data.map(($entityInstance) {'),
-      Code('return ListTile(')
+      Code('return ListTile('),
+      Code(
+          'onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ${element.name}FormPage($entityInstance: $entityInstance)));},')
     ];
     try {
       buildCode.add(Code(
