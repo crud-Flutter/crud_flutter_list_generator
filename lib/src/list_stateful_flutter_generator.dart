@@ -12,6 +12,7 @@ class ListStatefulFlutterGenerator
   @override
   FutureOr<String> generateForAnnotatedElement(
       Element element, ConstantReader annotation, BuildStep buildStep) {
+    init();
     name = '${element.name}ListFulPage';
     this.element = element;
     this.annotation = annotation;

@@ -1,11 +1,3 @@
-// import 'dart:async';
-
-// import 'package:analyzer/dart/element/element.dart';
-// import 'package:build/src/builder/build_step.dart';
-// import 'package:crud_flutter_list_generator/crud_flutter_list_generator.dart';
-// import 'package:crud_generator/crud_generator.dart';
-// import 'package:source_gen/source_gen.dart';
-
 import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
@@ -20,6 +12,7 @@ class ListStateFlutterBuilder
   @override
   FutureOr<String> generateForAnnotatedElement(
       Element element, ConstantReader annotation, BuildStep buildStep) {
+    init();
     name = '${element.name}ListFulPageState';
     extend = refer('State<${element.name}ListFulPage>');
     this.element = element;
@@ -60,7 +53,7 @@ class ListStateFlutterBuilder
       try {
         buildCode.add(Code(
             'subtitle: Text($entityInstance.${getAnnotationValue("listSubTitle").stringValue}),'));
-      } finally {
+      } catch (e) {} finally {
         buildCode.add(Code(');'));
         buildCode.add(Code('}).toList()'));
         buildCode.add(Code(');'));
