@@ -26,12 +26,7 @@ class ListStatelessFlutterGenerator
       create = getAnnotationValue('create').boolValue;
     } finally {
       _methodBuild(create, drawer);
-      return "import '${element.name.toLowerCase()}.list.stateful.dart';" +
-          (create
-              ? "import '${element.name.toLowerCase()}.form.stateful.dart';"
-              : '') +
-          (drawer ? "import '../drawer.dart';" : '') +
-          build();
+      return build();
     }
   }
 
@@ -42,13 +37,18 @@ class ListStatelessFlutterGenerator
     } catch (e) {
       titlePage = '${element.name}s';
     }
+    addImportPackage('${element.name.toLowerCase()}.list.stateful.dart');
     var body = Code('body: ${element.name}ListFulPage(),');
     var fab;
     if (create) {
+      addImportPackage('${element.name.toLowerCase()}.form.stateful.dart');
       fab = instanceFab(
           Code('Icon(Icons.add)'),
           Code(
               '(){Navigator.push(context, MaterialPageRoute(builder: (context) => ${element.name}FormPage()));}'));
+    }
+    if (drawer) {
+      addImportPackage('../drawer.dart');
     }
     methodBuild(
         instanceScaffold(titlePage, body: body, fab: fab, drawer: drawer));

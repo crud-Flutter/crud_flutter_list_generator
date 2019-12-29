@@ -17,11 +17,13 @@ class ListStatefulFlutterGenerator
     this.element = element;
     this.annotation = annotation;
     extend = refer('StatefulWidget');
+    addImportPackage('package:flutter/material.dart');
     _methodCreateState();
-    return "import '${element.name.toLowerCase()}.list.state.dart';" + build();
+    return build();
   }
 
   void _methodCreateState() {
+    addImportPackage('${element.name.toLowerCase()}.list.state.dart');
     declareMethod('createState',
         returns: refer('${element.name}ListFulPageState'),
         lambda: true,

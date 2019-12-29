@@ -17,21 +17,21 @@ class ListStateFlutterBuilder
     extend = refer('State<${element.name}ListFulPage>');
     this.element = element;
     this.annotation = annotation;
+    addImportPackage('${element.name.toLowerCase()}.list.stateful.dart');
     _declareField();
     _methodBuild();
-    return "import '${element.name.toLowerCase()}.list.stateful.dart';"
-            "import '${element.name.toLowerCase()}.form.stateful.dart';"
-            "import '${element.name.toLowerCase()}.entity.dart';"
-            "import '${element.name.toLowerCase()}.bloc.dart';" +
-        build();
+    return build();
   }
 
   void _declareField() {
+    addImportPackage('${element.name.toLowerCase()}.bloc.dart');
     declareField(refer('${element.name}Bloc'), '_bloc',
         assignment: Code('${element.name}Bloc()'));
   }
 
   void _methodBuild() {
+    addImportPackage('${element.name.toLowerCase()}.entity.dart');
+    addImportPackage('${element.name.toLowerCase()}.form.stateful.dart');
     var buildCode = [
       Code('return StreamBuilder<List<$entityClass>>('),
       Code('stream: _bloc.list,'),
