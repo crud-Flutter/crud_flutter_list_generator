@@ -18,19 +18,24 @@ class ListStatelessFlutterGenerator
     this.annotation = annotation;
     extend = refer('StatelessWidget');
     var create = true;
+    var drawer = false;
+    try {
+      drawer = getAnnotationValue('drawer').boolValue;
+    } catch (e) {}
     try {
       create = getAnnotationValue('create').boolValue;
     } finally {
-      _methodBuild(create);
+      _methodBuild(create, drawer);
       return "import '${element.name.toLowerCase()}.list.stateful.dart';" +
           (create
               ? "import '${element.name.toLowerCase()}.form.stateful.dart';"
               : '') +
+          (drawer ? "import '../drawer.dart';" : '') +
           build();
     }
   }
 
-  void _methodBuild(bool create) {
+  void _methodBuild(bool create, bool drawer) {
     var titlePage;
     try {
       titlePage = getAnnotationValue('titlePage').stringValue;
@@ -38,18 +43,14 @@ class ListStatelessFlutterGenerator
       titlePage = '${element.name}s';
     }
     var body = Code('body: ${element.name}ListFulPage(),');
+    var fab;
     if (create) {
-      methodBuild(instanceScaffold(titlePage,
-          body: body,
-          fab: instanceFab(
-              Code('Icon(Icons.add)'),
-              Code(
-                  '(){Navigator.push(context, MaterialPageRoute(builder: (context) => ${element.name}FormPage()));}'))));
-    } else {
-      methodBuild(instanceScaffold(
-        titlePage,
-        body: body,
-      ));
+      fab = instanceFab(
+          Code('Icon(Icons.add)'),
+          Code(
+              '(){Navigator.push(context, MaterialPageRoute(builder: (context) => ${element.name}FormPage()));}'));
     }
+    methodBuild(
+        instanceScaffold(titlePage, body: body, fab: fab, drawer: drawer));
   }
 }
