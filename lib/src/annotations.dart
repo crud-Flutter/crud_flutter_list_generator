@@ -1,5 +1,3 @@
-import 'package:code_builder/code_builder.dart';
-
 class ListEntity {
   final String titlePage;
   final String listTitle;
