@@ -1,68 +1,72 @@
-import 'dart:async';
-
-import 'package:analyzer/dart/element/element.dart';
-import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:crud_flutter_list_generator/crud_flutter_list_generator.dart';
 import 'package:crud_generator/crud_generator.dart';
-import 'package:source_gen/source_gen.dart';
 
 class ListStateFlutterBuilder
     extends GenerateFlutterWidgetForAnnotation<ListEntity> {
   @override
-  FutureOr<String> generateForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) {
-    init();
-    name = '${element.name}ListFulPageState';
-    extend = refer('State<${element.name}ListFulPage>');
-    this.element = element;
-    this.annotation = annotation;
+  String generateName() => '${element.name}ListFulPageState';
+
+  @override
+  void optionalClassInfo() {
     addImportPackage('${element.name.toLowerCase()}.list.stateful.dart');
-    _declareField();
-    _methodBuild();
-    return build();
+    extend = refer('flutter.State<${element.name}ListFulPage>');
   }
 
-  void _declareField() {
+  @override
+  void generateFields() {
+    addImportPackage('package:bloc_pattern/bloc_pattern.dart');
     addImportPackage('${element.name.toLowerCase()}.bloc.dart');
-    declareField(refer('${element.name}Bloc'), '_bloc',
-        assignment: Code('${element.name}Bloc()'));
+    declareField(
+      refer('${element.name}Bloc'),
+      '_bloc',
+      assignment: Code('BlocProvider.getBloc<${element.name}Bloc>()'),
+    );
   }
 
-  void _methodBuild() {
+  @override
+  void generateMethods() {
+    // methodDispose();
     addImportPackage('${element.name.toLowerCase()}.entity.dart');
     addImportPackage('${element.name.toLowerCase()}.form.stateful.dart');
-    var buildCode = [
-      Code('return StreamBuilder<List<$entityClass>>('),
-      Code('stream: _bloc.list,'),
-      Code('builder: (context, snapshot) {'),
-      Code(
-          'if (!snapshot.hasData) return Center(child: CircularProgressIndicator());'),
-      // Code(
-      //     'if (snapshot.hasError) return SimpleDilaog(title: snapshot.error);'),
-      Code('return ListView('),
-      Code('children: snapshot.data.map(($entityInstance) {'),
-      Code('return ListTile('),
-      Code(
-          'onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ${element.name}FormPage($entityInstance: $entityInstance)));},')
-    ];
+    var buildCode =
+        StringBuffer('''return flutter.StreamBuilder<List<$entityClass>>(
+      stream: _bloc.list,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) 
+          return flutter.Center(child: flutter.CircularProgressIndicator());      
+      return flutter.ListView(
+        children: snapshot.data.map(($entityInstance) {
+          return flutter.ListTile(
+            onTap: () {
+              _bloc.$entityInstance = $entityInstance;
+              flutter.Navigator.push
+              (context, flutter.MaterialPageRoute
+              (builder: (context) => ${element.name}FormPage()));},
+    ''');
     try {
-      buildCode.add(Code(
-          'title: Text($entityInstance.${getAnnotationValue("listTitle").stringValue}),'));
+      buildCode.writeln(
+          '''title: flutter.Text
+          ($entityInstance.${getAnnotationValue("listTitle").stringValue}),''');
     } finally {
       try {
-        buildCode.add(Code(
-            'subtitle: Text($entityInstance.${getAnnotationValue("listSubTitle").stringValue}),'));
+        buildCode.writeln(
+            '''subtitle: flutter.Text($entityInstance.${getAnnotationValue
+            ("listSubTitle").stringValue}),''');
       } catch (e) {} finally {
-        buildCode.add(Code(');'));
-        buildCode.add(Code('}).toList()'));
-        buildCode.add(Code(');'));
-        buildCode.add(Code('},'));
-        buildCode.add(Code(');'));
-        var blockBuilder = BlockBuilder();
-        blockBuilder.statements.addAll(buildCode);
-        methodBuild(blockBuilder.build());
+        buildCode.writeln(''');
+        }).toList()
+        );
+        },
+        );''');
+        methodBuild(Code(buildCode.toString()));
       }
     }
   }
+
+  @override
+  void generateConstructors() {}
+
+  @override
+  GenerateClassForAnnotation instance() => null;
 }
